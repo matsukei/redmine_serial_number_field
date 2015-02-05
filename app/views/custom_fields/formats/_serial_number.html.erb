@@ -1,0 +1,8 @@
+<p>
+  <%= f.select :target_on, @custom_field.possible_values_options, :required => true %>
+</p>
+
+<p>
+  <%= f.text_field :serial_number_format, :size => 50, :required => true %>
+  <em class="info"><%= l(:text_serial_number_format_info) %></em>
+</p>

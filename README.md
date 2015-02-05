@@ -29,6 +29,7 @@ Redmine plugin for automatically available to custom field to generate a sequent
 ### Format
 
 * http://docs.ruby-lang.org/ja/2.1.0/method/String/i/succ.html
+* http://docs.ruby-lang.org/ja/2.1.0/method/String/i/rjust.html
 * http://pubs.opengroup.org/onlinepubs/009695399/functions/strftime.html
 * https://github.com/asanghi/fiscali
   * http://qiita.com/snoozer05/items/57715f028a8da5aa45f4

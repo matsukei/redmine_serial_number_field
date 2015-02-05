@@ -1,0 +1,5 @@
+ja:
+  label_serial_number: 自動採番
+  field_target_on: 採番対象の日付
+  field_serial_number_format: 採番フォーマット
+  text_serial_number_format_info: 例) {{yy}}{{000}}
