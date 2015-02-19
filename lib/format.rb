@@ -2,6 +2,7 @@ module RedmineSerialNumberField
   class Format < Redmine::FieldFormat::Unbounded
     add 'serial_number'
     self.searchable_supported = true
+    self.customized_class_names = %w(Issue)
     self.form_partial = 'custom_fields/formats/serial_number'
 
     field_attributes :target_on, :serial_number_format
