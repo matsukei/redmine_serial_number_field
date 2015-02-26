@@ -1,0 +1,15 @@
+<% ids = issue.serial_number_fields.map { |cf| custom_field_tag_id(:issue, cf) } %>
+
+<%= javascript_tag do %>
+  var matsukei = matsukei || {};
+  var serial_number_field_ids = <%=raw ids.to_json %>;
+
+  matsukei.bootFn = function() {
+    $.each(serial_number_field_ids, function(i, value) {
+      $('#' + value).parent().parent().remove();
+    });
+  };
+
+  $(document).ready(matsukei.bootFn);
+  $(document).on("page:load", matsukei.bootFn);
+<% end %>

@@ -9,4 +9,6 @@ Redmine::Plugin.register :redmine_serial_number_field do
 end
 
 require_relative 'lib/format'
-require_relative 'lib/issue_controller_hooks'
+require_relative 'app/hooks/issue_controller_hook'
+require_relative 'app/hooks/issue_view_hook'
+require_relative 'app/patches/issue_patch'

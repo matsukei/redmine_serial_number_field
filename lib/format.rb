@@ -1,6 +1,8 @@
-module RedmineSerialNumberField
+module SerialNumberField
   class Format < Redmine::FieldFormat::Unbounded
-    add 'serial_number'
+    NAME = 'serial_number'
+
+    add NAME
     self.searchable_supported = true
     self.customized_class_names = %w(Issue)
     self.form_partial = 'custom_fields/formats/serial_number'
@@ -23,6 +25,10 @@ module RedmineSerialNumberField
       # TODO
       # display: none
       view.text_field_tag(tag_name, custom_value.value, options.merge(:id => tag_id, :disabled => true))
+    end
+
+    def generate_value
+      # TODO
     end
 
   end

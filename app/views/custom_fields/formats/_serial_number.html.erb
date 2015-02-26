@@ -6,3 +6,18 @@
   <%= f.text_field :serial_number_format, :size => 50, :required => true %>
   <em class="info"><%= l(:text_serial_number_format_info) %></em>
 </p>
+
+<%= f.hidden_field :is_required, :value => '0' %>
+<%= f.hidden_field :visible, :value => '1' %>
+<%= hidden_field_tag 'custom_field[role_ids][]', '' %>
+
+<script>
+  var matsukei = matsukei || {};
+  matsukei.bootFn = function() {
+    $('input[type="checkbox"]#custom_field_is_required').parent().remove();
+    $('input[type="radio"]#custom_field_visible_on').parent().parent().remove();
+  };
+
+  $(document).ready(matsukei.bootFn);
+  $(document).on("page:load", matsukei.bootFn);
+</script>
