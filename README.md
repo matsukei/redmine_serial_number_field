@@ -4,7 +4,7 @@ Redmine plugin for automatically available to custom field to generate a sequent
 
 ## Features
 
-* 自動的に連番を生成するカスタムフィールド(チケット用)が利用可能
+* 自動的に連番を生成するカスタムフィールド(チケット専用)が利用可能
   * カスタムフィールドの設定画面で、設定されたフォーマットを元にプロジェクト単位で
     * チケット作成時に自動的に採番する
     * 一括編集時に自動的に採番する
@@ -16,6 +16,7 @@ Redmine plugin for automatically available to custom field to generate a sequent
 
 * 異なるプロジェクトへチケット移動した場合の採番
 * 単一チケット編集した場合の採番
+* 単一チケット作成した場合にカスタムフィールドがあった箇所が空で表示される
 
 ## Usage
 
