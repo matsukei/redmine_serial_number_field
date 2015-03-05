@@ -5,9 +5,17 @@ Redmine plugin for automatically available to custom field to generate a sequent
 ## Features
 
 * 自動的に連番を生成するカスタムフィールド(チケット用)が利用可能
-  * カスタムフィールドの設定画面で、設定された日付(issueのcreated_atとか、、、)を元に採番ルールでチケット作成時に自動的に採番する
-* チケットのフィルタ条件、検索対象など、カスタムフィールドの基本的なオプションも利用化
+  * カスタムフィールドの設定画面で、設定されたフォーマットを元にプロジェクト単位で
+    * チケット作成時に自動的に採番する
+    * 一括編集時に自動的に採番する
+* チケットのフィルタ条件、検索対象など、カスタムフィールドの基本的なオプションも利用可能
+  * 表示は全ユーザーに対して行われる
 * 原則編集不可とし、照会画面には表示（編集画面には表示しない）
+
+### Unimplemented
+
+* 異なるプロジェクトへチケット移動した場合の採番
+* 単一チケット編集した場合の採番
 
 ## Usage
 
@@ -15,21 +23,20 @@ Redmine plugin for automatically available to custom field to generate a sequent
 
 ## Supported versions
 
-* Redmine 2.6+
+* Redmine 2.6.0
 
-## Specifications
+## Format specifications
 
-|採番対象の日付|日付フォーマット|年度 |連番フォーマット|結果                    |
+|採番対象の日付  |年表記フォーマット   |年度 |連番フォーマット     |結果                     |
 |--------------|----------------|-----|----------------|------------------------|
-|created_at    |`%y`            |No   |000             |2015-03-01 => '15001'   |
-|created_at    |`%Y`            |No   |0000            |2015-03-01 => '20150001'|
-|created_at    |`%y`            |Yes  |000             |2015-03-01 => '14001'   |
-|created_at    |`%Y`            |Yes  |0000            |2015-03-01 => '20140001'|
+|created_on    |`yy`            |No   |000             |2015-03-01 => '15001'   |
+|created_on    |`yyyy`          |No   |0000            |2015-03-01 => '20150001'|
+|created_on    |`YY`            |Yes  |000             |2015-03-01 => '14001'   |
+|created_on    |`YYYY`          |Yes  |0000            |2015-03-01 => '20140001'|
 
-### Format
-
-* http://docs.ruby-lang.org/ja/2.1.0/method/String/i/succ.html
-* http://docs.ruby-lang.org/ja/2.1.0/method/String/i/rjust.html
-* http://pubs.opengroup.org/onlinepubs/009695399/functions/strftime.html
-* https://github.com/asanghi/fiscali
-  * http://qiita.com/snoozer05/items/57715f028a8da5aa45f4
+* OK
+  * `{000000}` #=> `000001`
+  * `ABC-{yy}-{00}` #=> `ABC-15-01`
+* NG
+  * 末尾が連番フォーマット出ない場合 e.g. `ABC-{000}-{yy}`
+  * 年表記フォーマット、連番フォーマットでない場合 e.g. `{abc}-{yy}-{000}`
