@@ -1,10 +1,10 @@
 <p>
-  <%= f.select :target_on, @custom_field.possible_values_options, :required => true %>
-</p>
-
-<p>
-  <%= f.text_field :serial_number_format, :size => 50, :required => true %>
-  <em class="info"><%= l(:text_serial_number_format_info) %></em>
+  <%= f.text_field(:default_value, :required => true) %>
+  <em class="info">e.g. created_on: 2015-03-31</em>
+  <em class="info">{yyyy}-{0000} #=> 2015-0001</em>
+  <em class="info">{yy}-{0000} #=> 15-0001</em>
+  <em class="info">{YYYY}-{0000} #=> 2014-0001</em>
+  <em class="info">{YY}-{0000} #=> 14-0001</em>
 </p>
 
 <%= f.hidden_field :is_required, :value => '0' %>
@@ -12,12 +12,8 @@
 <%= hidden_field_tag 'custom_field[role_ids][]', '' %>
 
 <script>
-  var matsukei = matsukei || {};
-  matsukei.bootFn = function() {
+  $(document).ready(function() {
     $('input[type="checkbox"]#custom_field_is_required').parent().remove();
     $('input[type="radio"]#custom_field_visible_on').parent().parent().remove();
-  };
-
-  $(document).ready(matsukei.bootFn);
-  $(document).on("page:load", matsukei.bootFn);
+  });
 </script>

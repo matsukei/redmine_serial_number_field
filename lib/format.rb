@@ -7,28 +7,30 @@ module SerialNumberField
     self.customized_class_names = %w(Issue)
     self.form_partial = 'custom_fields/formats/serial_number'
 
-    field_attributes :target_on, :serial_number_format
+    LIST = {
+      :'yyyy' => '%Y',
+      :'yy' => '%y',
+      :'YYYY' => 'TODO: financial_year',
+      :'YY' => 'TODO: financial_year'
+    }
 
-    def formatted_value(view, custom_field, value, customized = nil, html = false)
-      # TODO
-      # valid format
+    def validate_single_value(custom_field, value, customized = nil)
+      errors = []
+      errors << ::I18n.t('activerecord.errors.messages.end_must_numeric_format_in_serial_number') unless value =~ /\{\d+\}\Z/
+      value.scan(/\{(.+?)\}/).flatten.each do |format_value|
+        unless format_value =~ /\A\d+\Z/
+          errors << ::I18n.t('activerecord.errors.messages.invalid_format_in_serial_number',
+            :invalid_format => ['{', format_value, '}'].join('')) unless LIST.stringify_keys.keys.include?(format_value)
+        end
+      end
+
+      errors.uniq
     end
 
-    def possible_values_options(custom_field, object=nil)
-      [
-        [],
-        [::I18n.t('field_created_on'), 'created_on']
-      ]
-    end
-
-    def edit_tag(view, tag_id, tag_name, custom_value, options={})
+    def generate_value(datetime)
       # TODO
-      # display: none
-      view.text_field_tag(tag_name, custom_value.value, options.merge(:id => tag_id, :disabled => true))
-    end
-
-    def generate_value
-      # TODO
+      # "foo".rjust(10, "*")
+      # "09".next # => "10"
     end
 
   end

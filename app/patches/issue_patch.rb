@@ -9,7 +9,7 @@ module SerialNumberField
         next if assigned_serial_number?(cf)
 
         CustomValue.create!(:custom_field => cf,
-          :customized => self, :value => cf.generate_value)
+          :customized => self, :value => cf.generate_value(created_on || DateTime.now))
       end
     end
 
