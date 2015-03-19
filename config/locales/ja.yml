@@ -5,4 +5,4 @@ ja:
     errors:
       messages:
         end_must_numeric_format_in_serial_number: "の末尾は連番フォーマットでなければなりません。"
-        invalid_format_in_serial_number: "の%{invalid_format}は有効なフォーマットではありません。"
+        invalid_format_in_serial_number: "に無効なフォーマットが含まれています。"

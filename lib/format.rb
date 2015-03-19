@@ -1,5 +1,5 @@
 module SerialNumberField
-  class Format < Redmine::FieldFormat::Unbounded
+  class Format < Redmine::FieldFormat::Base
     NAME = 'serial_number'
 
     add NAME
@@ -14,13 +14,13 @@ module SerialNumberField
       :'YY' => 'TODO: financial_year'
     }
 
-    def validate_single_value(custom_field, value, customized = nil)
+    def validate_custom_field(custom_field)
+      value = custom_field.regexp
       errors = []
-      errors << ::I18n.t('activerecord.errors.messages.end_must_numeric_format_in_serial_number') unless value =~ /\{\d+\}\Z/
+      errors << [:regexp, :end_must_numeric_format_in_serial_number] unless value =~ /\{\d+\}\Z/
       value.scan(/\{(.+?)\}/).flatten.each do |format_value|
         unless format_value =~ /\A\d+\Z/
-          errors << ::I18n.t('activerecord.errors.messages.invalid_format_in_serial_number',
-            :invalid_format => ['{', format_value, '}'].join('')) unless LIST.stringify_keys.keys.include?(format_value)
+          errors << [:regexp, :invalid_format_in_serial_number] unless LIST.stringify_keys.keys.include?(format_value)
         end
       end
 

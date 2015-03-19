@@ -1,5 +1,5 @@
 <p>
-  <%= f.text_field(:default_value, :required => true) %>
+  <%= f.text_field(:regexp, :size => 50, :required => true) %>
   <em class="info">e.g. created_on: 2015-03-31</em>
   <em class="info">{yyyy}-{0000} #=> 2015-0001</em>
   <em class="info">{yy}-{0000} #=> 15-0001</em>
