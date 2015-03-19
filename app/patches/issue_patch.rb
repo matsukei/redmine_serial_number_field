@@ -8,14 +8,21 @@ module SerialNumberField
       serial_number_fields.each do |cf|
         next if assigned_serial_number?(cf)
 
-        CustomValue.create!(:custom_field => cf,
-          :customized => self, :value => cf.generate_value(created_on || DateTime.now))
+        target_custom_value = serial_number_custom_values(cf).first
+        target_custom_value.update_attributes!(
+          :value => cf.format.generate_value(cf, self))
       end
     end
 
     def assigned_serial_number?(cf)
-      CustomValue.exists?(:custom_field_id => cf.id,
-        :customized_type => 'Issue',:customized_id => self.id)
+      serial_number_custom_values(cf).where(
+        'custom_values.value is not null').present?
+    end
+
+    def serial_number_custom_values(cf)
+      CustomValue.where(:custom_field_id => cf.id,
+        :customized_type => 'Issue',
+        :customized_id => self.id)
     end
 
     def serial_number_fields
