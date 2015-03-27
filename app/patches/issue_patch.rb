@@ -9,8 +9,18 @@ module SerialNumberField
         next if assigned_serial_number?(cf)
 
         target_custom_value = serial_number_custom_values(cf).first
-        target_custom_value.update_attributes!(
-          :value => cf.format.generate_value(cf, self))
+        new_serial_number = cf.format.generate_value(cf, self)
+
+        # TODO find_or_create_by
+        if target_custom_value.present?
+          target_custom_value.update_attributes!(
+            :value => new_serial_number)
+        else
+          CustomValue.create!(:custom_field_id => cf.id,
+            :customized_type => 'Issue',
+            :customized_id => self.id,
+            :value => new_serial_number)
+        end
       end
     end
 
