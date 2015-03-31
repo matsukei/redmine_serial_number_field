@@ -15,6 +15,7 @@ Redmine plugin for automatically available to custom field to generate a sequent
 ### Unimplemented
 
 * 異なるプロジェクトへチケット移動した場合の採番
+* 採番対象のトラッカーへ変更した場合の採番
 * 単一チケット編集した場合の採番
 * 単一チケット作成した場合にカスタムフィールドがあった箇所が空で表示される
 
