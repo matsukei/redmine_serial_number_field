@@ -7,22 +7,27 @@ module SerialNumberField
     self.customized_class_names = %w(Issue)
     self.form_partial = 'custom_fields/formats/serial_number'
 
-    LIST = {
-      :'yyyy' => { :strftime => '%Y' },
-      :'yy' => { :strftime => '%y' },
-      :'YYYY' => { :strftime => '%Y', :financial_year => true },
-      :'YY' => { :strftime => '%y', :financial_year => true }
+    MATCHERS = {
+      :TOW_DIGIT_NUMBER => /\d{2}/,
+      :FOUR_DIGIT_NUMBER => /\d{4}/,
+      :FORMAT_WRAPPER => /\{(.+?)\}/
+    }
+
+    DATE_FORMATS = {
+      :'yyyy' => { :strftime => '%Y', :financial_year => false, :regexp => MATCHERS[:FOUR_DIGIT_NUMBER] },
+      :'yy'   => { :strftime => '%y', :financial_year => false, :regexp => MATCHERS[:TOW_DIGIT_NUMBER] },
+      :'YYYY' => { :strftime => '%Y', :financial_year => true, :regexp => MATCHERS[:FOUR_DIGIT_NUMBER] },
+      :'YY'   => { :strftime => '%y', :financial_year => true, :regexp => MATCHERS[:TOW_DIGIT_NUMBER] }
     }
 
     def validate_custom_field(custom_field)
       value = custom_field.regexp
       errors = []
-      # TODO DRY
+
       errors << [:regexp, :end_must_numeric_format_in_serial_number] unless value =~ /\{0+\}\Z/
-      value.gsub(/\{(.+?)\}/) do |format_value_with_brace|
-        format_value = $1.clone
+      replace_format_value(custom_field) do |format_value|
         unless format_value =~ /\A0+\Z/
-          errors << [:regexp, :invalid_format_in_serial_number] unless LIST.stringify_keys.keys.include?(format_value)
+          errors << [:regexp, :invalid_format_in_serial_number] unless date_format_keys.include?(format_value)
         end
       end
 
@@ -30,31 +35,66 @@ module SerialNumberField
     end
 
     def generate_value(custom_field, issue)
-      value = custom_field.custom_values.where(
-        customized_id: issue.project.issues.map(&:id)).maximum(:value)
+      datetime = issue.created_on || DateTime.now
+      value = max_custom_value(custom_field, issue, datetime)
 
       if value.present?
-        value = value.next
+        value.next
       else
-        # TODO DRY
-        datetime = issue.created_on || DateTime.now
-        value = custom_field.regexp.gsub(/\{(.+?)\}/) do |format_value_with_brace|
-          format_value = $1.clone
-          if LIST.stringify_keys.keys.include?(format_value)
-            parse_date_time_format(format_value, datetime)
-          else
-            parse_number_format(format_value)
-          end
-        end
+        generate_first_value(custom_field, datetime)
       end
-
-      value
     end
 
     private
 
-      def parse_date_time_format(format_value, datetime)
-        parse_conf = LIST[format_value.to_sym]
+      def date_format_keys
+        DATE_FORMATS.stringify_keys.keys
+      end
+
+      def max_custom_value(custom_field, issue, datetime)
+        matcher = generate_matcher(custom_field, datetime)
+        custom_values = custom_field.custom_values.where(
+          customized_id: issue.project.issues.map(&:id)).map(&:value)
+
+        custom_values.select { |value| value =~ matcher }.sort.last
+      end
+
+      def replace_format_value(custom_field)
+        if block_given?
+          custom_field.regexp.gsub(MATCHERS[:FORMAT_WRAPPER]) do |format_value_with_brace|
+            yield($1.clone)
+          end
+        end
+      end
+
+      def generate_matcher(custom_field, datetime)
+        matcher_str = replace_format_value(custom_field) do |format_value|
+          if date_format_keys.include?(format_value)
+            generate_date_value(format_value, datetime)
+          else
+            generate_number_matcher(format_value)
+          end
+        end
+
+        Regexp.new(matcher_str)
+      end
+
+      def generate_number_matcher(format_value)
+        ['\d', '{', format_value.size.to_s, '}'].join
+      end
+
+      def generate_first_value(custom_field, datetime)
+        replace_format_value(custom_field) do |format_value|
+          if date_format_keys.include?(format_value)
+            generate_date_value(format_value, datetime)
+          else
+            generate_number_value(format_value)
+          end
+        end
+      end
+
+      def generate_date_value(format_value, datetime)
+        parse_conf = DATE_FORMATS[format_value.to_sym]
         if parse_conf.key?(:financial_year) && parse_conf[:financial_year]
           datetime = datetime.beginning_of_financial_year
         end
@@ -62,7 +102,7 @@ module SerialNumberField
         datetime.strftime(parse_conf[:strftime])
       end
 
-      def parse_number_format(format_value)
+      def generate_number_value(format_value)
         '1'.rjust(format_value.size, '0')
       end
 
