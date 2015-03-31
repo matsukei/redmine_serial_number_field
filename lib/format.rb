@@ -35,7 +35,7 @@ module SerialNumberField
     end
 
     def generate_value(custom_field, issue)
-      datetime = issue.created_on || DateTime.now
+      datetime = issue.created_on.to_datetime || DateTime.now
       value = max_custom_value(custom_field, issue, datetime)
 
       if value.present?
