@@ -96,6 +96,7 @@ module SerialNumberField
       def generate_date_value(format_value, datetime)
         parse_conf = DATE_FORMATS[format_value.to_sym]
         if parse_conf.key?(:financial_year) && parse_conf[:financial_year]
+          DateTime.fiscal_zone = :japan
           datetime = datetime.beginning_of_financial_year
         end
 
