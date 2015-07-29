@@ -23,7 +23,13 @@ Redmine plugin for automatically available to custom field to generate a sequent
 
 ## Usage
 
-**TODO**
+1. チケットの新しいカスタムフィールドを作成します。
+2. 項目「書式」を自動採番に変更します。
+3. 項目「正規表現」に自動採番のフォーマットを指定します。
+4. フィルタや検索条件として使いたい場合はチェックを入れます。
+5. 自動採番をしたいトラッカーとプロジェクトを指定します。
+
+![usage.png](https://github.com/matsukei/redmine_serial_number_field/blob/master/doc/images/usage.png)
 
 ## Supported versions
 
@@ -31,12 +37,12 @@ Redmine plugin for automatically available to custom field to generate a sequent
 
 ## Format specifications
 
-|採番対象の日付  |年表記フォーマット   |年度 |連番フォーマット     |結果                     |
-|--------------|----------------|-----|----------------|------------------------|
-|created_on    |`yy`            |No   |000             |2015-03-01 => '15001'   |
-|created_on    |`yyyy`          |No   |0000            |2015-03-01 => '20150001'|
-|created_on    |`YY`            |Yes  |000             |2015-03-01 => '14001'   |
-|created_on    |`YYYY`          |Yes  |0000            |2015-03-01 => '20140001'|
+|採番対象の日付|年表記フォーマット |年度            |連番フォーマット|結果                    |
+|--------------|-------------------|----------------|----------------|------------------------|
+|created_on    |`yy`               |No              |000             |2015-03-01 => '15001'   |
+|created_on    |`yyyy`             |No              |0000            |2015-03-01 => '20150001'|
+|created_on    |`YY`               |Yes             |000             |2015-03-01 => '14001'   |
+|created_on    |`YYYY`             |Yes             |0000            |2015-03-01 => '20140001'|
 
 * OK
   * `{000000}` #=> `000001`
