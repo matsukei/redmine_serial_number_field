@@ -54,5 +54,4 @@ Redmine plugin for automatically available to custom field to generate a sequent
 ## Install
 
 1. `your_redmine_path/plugins/redmine_serial_number_field/` に clone もしくはダウンロードしたソースを配置します
-2. `$ rake redmine:plugins:migrate NAME=redmine_serial_number_field RAILS_ENV=production` を実行してください
-3. Redmineを再起動してください
+2. Redmineを再起動してください
