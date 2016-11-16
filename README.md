@@ -28,12 +28,16 @@ Redmine plugin for automatically available to custom field to generate a sequent
 3. 項目「正規表現」に自動採番のフォーマットを指定します。
 4. フィルタや検索条件として使いたい場合はチェックを入れます。
 5. 自動採番をしたいトラッカーとプロジェクトを指定します。
+6. 完了です。
+  * 新たにチケットを作成すれば自動で採番されます。
+  * 既に作成されたチケットに採番する際は、一括編集を2回行ってください。
+    * チケットの一括編集: http://blog.redmine.jp/articles/unnoticed-features/
 
 ![usage.png](https://github.com/matsukei/redmine_serial_number_field/blob/master/doc/images/usage.png)
 
 ## Supported versions
 
-* Redmine 2.6.0
+* Redmine 2.6.0, 3.2.x
 
 ## Format specifications
 
@@ -54,4 +58,6 @@ Redmine plugin for automatically available to custom field to generate a sequent
 ## Install
 
 1. `your_redmine_path/plugins/redmine_serial_number_field/` に clone もしくはダウンロードしたソースを配置します
-2. Redmineを再起動してください
+2. `$ cd your_redmine_path/`
+3. `$ bundle install`
+4. Redmineを再起動してください
