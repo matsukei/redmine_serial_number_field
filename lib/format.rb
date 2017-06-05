@@ -76,7 +76,7 @@ module SerialNumberField
             generate_date_value(format_value, datetime)
           else
             # TODO:
-            # 
+            #
             # CustomField of A.regexp #=> '{yy}-0{000}'
             #   matcher of A: /15-0\d{3}/
             # CustomField of B.regexp #=> '{yy}-{0000}'

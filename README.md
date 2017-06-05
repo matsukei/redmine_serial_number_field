@@ -1,5 +1,7 @@
 # Redmine Serial Number Field
 
+[![Build Status](https://travis-ci.org/matsukei/redmine_serial_number_field.svg?branch=master)](https://travis-ci.org/matsukei/redmine_serial_number_field)
+
 Redmine plugin for automatically available to custom field to generate a sequential number.
 
 ## Features
@@ -37,11 +39,11 @@ Redmine plugin for automatically available to custom field to generate a sequent
 
 ## Supported versions
 
-* Redmine 2.6.0, 3.2.x
+* Redmine 2.6.x or higher
 
 ## Format specifications
 
-|採番対象の日付|年表記フォーマット |年度            |連番フォーマット|結果                    |
+|採番対象の日付 |年表記フォーマット   |年度            |連番フォーマット|結果                      |
 |--------------|-------------------|----------------|----------------|------------------------|
 |created_on    |`yy`               |No              |000             |2015-03-01 => '15001'   |
 |created_on    |`yyyy`             |No              |0000            |2015-03-01 => '20150001'|
@@ -52,7 +54,7 @@ Redmine plugin for automatically available to custom field to generate a sequent
   * `{000000}` #=> `000001`
   * `ABC-{yy}-{00}` #=> `ABC-15-01`
 * NG
-  * 末尾が連番フォーマット出ない場合 e.g. `ABC-{000}-{yy}`
+  * 末尾が連番フォーマットでない場合 e.g. `ABC-{000}-{yy}`
   * 年表記フォーマット、連番フォーマットでない場合 e.g. `{abc}-{yy}-{000}`
 
 ## Install
@@ -61,3 +63,7 @@ Redmine plugin for automatically available to custom field to generate a sequent
 2. `$ cd your_redmine_path/`
 3. `$ bundle install`
 4. Redmineを再起動してください
+
+## License
+
+[The MIT License](https://opensource.org/licenses/MIT)
