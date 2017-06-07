@@ -3,12 +3,13 @@ require_dependency 'issue'
 module SerialNumberField
   module IssuePatch
     extend ActiveSupport::Concern
+    unloadable
 
     def assign_serial_number!
       serial_number_fields.each do |cf|
         next if assigned_serial_number?(cf)
 
-        target_custom_value = serial_number_custom_values(cf).first
+        target_custom_value = serial_number_custom_value(cf)
         new_serial_number = cf.format.generate_value(cf, self)
 
         # Unimplemented change Tracker(custom_value is nil)
@@ -20,14 +21,13 @@ module SerialNumberField
     end
 
     def assigned_serial_number?(cf)
-      serial_number_custom_values(cf).where(
-        'custom_values.value is not null').present?
+      serial_number_custom_value(cf).try(:value).present?
     end
 
-    def serial_number_custom_values(cf)
+    def serial_number_custom_value(cf)
       CustomValue.where(:custom_field_id => cf.id,
         :customized_type => 'Issue',
-        :customized_id => self.id)
+        :customized_id => self.id).first
     end
 
     def serial_number_fields

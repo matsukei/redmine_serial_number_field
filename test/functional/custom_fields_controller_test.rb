@@ -18,13 +18,12 @@ class SerialNumberField::CustomFieldsControllerTest < Redmine::ControllerTest
 
   def setup
     @request.session[:user_id] = 1
-    @def = IssueCustomField.find_by_name('SerialNumberField')
   end
 
   def test_new_should_serial_number_format_has_only_issue
     CustomFieldsHelper::CUSTOM_FIELDS_TABS.each do |tab|
       type = tab[:name]
-      format_name = 'serial_number'
+      format_name = SerialNumberField::Format::NAME
       expect_selected =  'IssueCustomField' == type ? 1 : 0
 
       get :new, :params => {
@@ -47,7 +46,7 @@ class SerialNumberField::CustomFieldsControllerTest < Redmine::ControllerTest
     get :new, :params => {
         :type => 'IssueCustomField',
         :custom_field => {
-          :field_format => 'serial_number'
+          :field_format => SerialNumberField::Format::NAME
         }
       }
     assert_response :success
@@ -55,7 +54,7 @@ class SerialNumberField::CustomFieldsControllerTest < Redmine::ControllerTest
     assert_select 'form#custom_field_form' do
       assert_select 'input[name=?]', 'custom_field[name]'
       assert_select 'textarea[name=?]', 'custom_field[description]'
-      assert_select 'input[name=?]', 'custom_field[regexp]'
+      assert_select 'input[name=?]:not([disabled])', 'custom_field[regexp]'
       # Trackers
       assert_select 'input[type=checkbox][name=?]', 'custom_field[project_ids][]', Project.count
       assert_select 'input[type=hidden][name=?]', 'custom_field[project_ids][]', 1
@@ -129,7 +128,7 @@ class SerialNumberField::CustomFieldsControllerTest < Redmine::ControllerTest
     assert_response :success
 
     assert_select 'input[name=?][value=?]', 'custom_field[name]', custom_field.name
-    assert_select 'input[name=?][value=?]', 'custom_field[regexp]', custom_field.regexp
+    assert_select 'input[name=?][value=?][disabled=disabled]', 'custom_field[regexp]', custom_field.regexp
   end
 
   def test_update_serial_number_field

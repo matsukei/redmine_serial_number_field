@@ -17,6 +17,7 @@ env:
 
 gemfile:
   - $REDMINE_PATH/Gemfile
+  - $REDMINE_PATH/plugins/$PLUGIN_NAME/Gemfile
 
 before_install:
   - export PLUGIN_NAME=redmine_serial_number_field
@@ -30,10 +31,9 @@ before_install:
 
 before_script:
   - bundle exec rake db:migrate
-  - bundle exec rake redmine:plugins:migrate
 
 script:
-  - bundle exec rake redmine:plugins:test NAME=$PLUGIN_NAME
+  - RUBYOPT=-W0 bundle exec rake redmine:plugins:test NAME=$PLUGIN_NAME
 
 branches:
   only:

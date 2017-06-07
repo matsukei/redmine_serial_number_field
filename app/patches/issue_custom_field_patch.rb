@@ -11,7 +11,7 @@ module SerialNumberField
         validate_custom_field_without_skip_regexp_valid
 
         invalid_message = l('activerecord.errors.messages.invalid')
-        if errors[:regexp].include?(invalid_message) && field_format == 'serial_number'
+        if errors[:regexp].include?(invalid_message) && field_format == SerialNumberField::Format::NAME
           regexp_error_messages = errors[:regexp].clone
 
           errors.delete(:regexp)

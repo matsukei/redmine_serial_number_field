@@ -1,17 +1,24 @@
-# Load the Redmine helper
+# coding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 
 def create_default_serial_number_field
   custom_field = IssueCustomField.create!({
     :field_format => "serial_number",
-    :name => 'default_serial_number_field',
+    :name => 's-n-field',
     :regexp => 'MCC-{0000}',
     :is_required =>"0",
+    :is_filter => "1",
+    :searchable => "1",
     :visible => "1",
-    :is_for_all => "0"
+    :is_for_all => "0",
+    :role_ids  => []
   })
 
+  # eCookbook
   Project.find(1).issue_custom_fields << custom_field
+  # OnlineStore
+  Project.find(2).issue_custom_fields << custom_field
+  # Bug
   Tracker.find(1).custom_fields << custom_field
 
   return custom_field
