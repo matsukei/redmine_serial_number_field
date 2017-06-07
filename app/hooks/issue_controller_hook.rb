@@ -1,6 +1,8 @@
 module SerialNumberField
 
   class IssueControllerHooks < Redmine::Hook::Listener
+    unloadable
+
     def controller_issues_bulk_edit_before_save(context = {})
       assign_serial_number(context)
     end

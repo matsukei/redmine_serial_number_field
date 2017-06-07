@@ -26,7 +26,7 @@ class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
       format_name = SerialNumberField::Format::NAME
       expect_selected =  'IssueCustomField' == type ? 1 : 0
 
-      get :new, :params => {
+      get :new, {
           :type => type,
           :custom_field => {
             :field_format => format_name
@@ -43,7 +43,7 @@ class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
   end
 
   def test_new_serial_number_format
-    get :new, :params => {
+    get :new, {
         :type => 'IssueCustomField',
         :custom_field => {
           :field_format => SerialNumberField::Format::NAME
@@ -72,7 +72,7 @@ class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
     valid_regexp_values.each_with_index do |valid_regexp, i|
       field_name = "auto_number_#{i.next}"
       field = new_record(IssueCustomField) do
-        post :create, :params => {
+        post :create, {
             :type => "IssueCustomField",
             :custom_field => {
               :field_format => "serial_number",
@@ -101,7 +101,7 @@ class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
   def test_create_serial_number_field_with_failure
     invalid_regexp_values.each_with_index do |invalid_regexp, i|
       assert_no_difference 'CustomField.count' do
-        post :create, :params => {
+        post :create, {
             :type => "IssueCustomField",
             :custom_field => {
               :field_format => "serial_number",
@@ -121,7 +121,7 @@ class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
   def test_edit_serial_number_field
     custom_field = create_default_serial_number_field
 
-    get :edit, :params => {
+    get :edit, {
         :id => custom_field.id
       }
 
@@ -135,7 +135,7 @@ class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
     custom_field = create_default_serial_number_field
 
     valid_regexp_values.each_with_index do |valid_regexp, i|
-      put :update, :params => {
+      put :update, {
           :id => custom_field.id,
           :custom_field => {
             :regexp => valid_regexp
@@ -152,7 +152,7 @@ class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
     custom_field = create_default_serial_number_field
 
     invalid_regexp_values.each_with_index do |invalid_regexp, i|
-      put :update, :params => {
+      put :update, {
           :id => custom_field.id,
           :custom_field => {
             :regexp => invalid_regexp

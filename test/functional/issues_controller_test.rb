@@ -23,7 +23,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_get_new
-    get :new, :params => {
+    get :new, {
         :project_id => 1,
         :tracker_id => 1
       }
@@ -39,7 +39,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     # test_post_create
     assert_difference 'Issue.count' do
       assert_no_difference 'Journal.count' do
-        post :create, :params => {
+        post :create, {
             :project_id => 1,
             :issue => {
               :tracker_id => 1,
@@ -59,7 +59,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     assert_equal 'MCC-0001', v.value
 
     # show
-    get :show, :params => {
+    get :show, {
         :id => issue.id
       }
     assert_response :success
@@ -72,7 +72,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     end
 
     # edit
-    get :edit, :params => {
+    get :edit, {
         :id => issue.id
       }
     assert_response :success
@@ -84,7 +84,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # update
     assert_difference 'Journal.count' do
-      put :update, :params => {
+      put :update, {
           :id => issue.id,
           :issue => {
             :notes => 'just trying'
@@ -99,7 +99,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_show_with_already_created
-    get :show, :params => {
+    get :show, {
         :id => 1
       }
     assert_response :success
@@ -114,7 +114,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit_with_already_created
-    get :edit, :params => {
+    get :edit, {
         :id => 1
       }
     assert_response :success
@@ -129,7 +129,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   def test_put_update_with_already_created
     3.times do |i|
       assert_difference 'Journal.count' do
-        put :update, :params => {
+        put :update, {
             :id => 1,
             :issue => {
               :subject => "try #{i.next}"
@@ -147,7 +147,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_get_bulk_edit
-    get :bulk_edit, :params => {
+    get :bulk_edit, {
         :ids => [1, 3]
       }
     assert_response :success
@@ -165,7 +165,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
       'MCC-0001', nil, 'MCC-0001', nil, 'MCC-0002', 'MCC-0003'
     ]
     # 1
-    post :bulk_update, :params => {
+    post :bulk_update, {
         :ids => issue_ids,
         :notes => 'Bulk editing #1'
       }
@@ -187,7 +187,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     end
 
     # 2
-    post :bulk_update, :params => {
+    post :bulk_update, {
         :ids => issue_ids,
         :notes => 'Bulk editing #2'
       }

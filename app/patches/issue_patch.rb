@@ -39,6 +39,6 @@ module SerialNumberField
   end
 end
 
-unless Issue.included_modules.include?(SerialNumberField::IssuePatch)
-  Issue.send(:include, SerialNumberField::IssuePatch)
+SerialNumberField::IssuePatch.tap do |mod|
+  Issue.send :include, mod unless Issue.include?(mod)
 end
