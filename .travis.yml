@@ -17,7 +17,6 @@ env:
 
 gemfile:
   - $REDMINE_PATH/Gemfile
-  - $REDMINE_PATH/plugins/$PLUGIN_NAME/Gemfile
 
 before_install:
   - export PLUGIN_NAME=redmine_serial_number_field

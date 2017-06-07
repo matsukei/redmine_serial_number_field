@@ -1,6 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-class SerialNumberField::CustomFieldsControllerTest < Redmine::ControllerTest
+class SerialNumberField::CustomFieldsControllerTest < ActionController::TestCase
   tests CustomFieldsController
 
   fixtures :custom_fields, :custom_values,
