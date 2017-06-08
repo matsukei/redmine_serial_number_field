@@ -18,8 +18,6 @@ class IssueTest < ActiveSupport::TestCase
   def setup
     set_language_if_valid 'en'
     @custom_field = create_default_serial_number_field
-    # Support request
-    Tracker.find(3).custom_fields << @custom_field
   end
 
   def teardown
@@ -29,24 +27,14 @@ class IssueTest < ActiveSupport::TestCase
   def test_create_with_changed_serial_number_halfway
     issue = Issue.new(:project_id => 1, :tracker_id => 1, :author_id => 3, :subject => 'test_create_1')
     assert issue.save
-    # via controller_issues_new_after_save
-    issue.assign_serial_number!
+    assert_added_serial_number(issue.id, 'MCC-0001', @custom_field)
 
-    v = issue.custom_values.where(:custom_field_id => @custom_field.id).first
-    assert_not_nil v
-    assert_equal 'MCC-0001', v.value
-
-    # changed regexp
+    # changed regexp(forced)
     @custom_field.update_attributes(regexp: 'ABC-{0001}')
 
     issue = Issue.new(:project_id => 1, :tracker_id => 3, :author_id => 3, :subject => 'test_create_2')
     assert issue.save
-    # via controller_issues_new_after_save
-    issue.assign_serial_number!
-
-    v = issue.custom_values.where(:custom_field_id => @custom_field.id).first
-    assert_not_nil v
-    assert_equal 'MCC-0002', v.value
+    assert_added_serial_number(issue.id, 'MCC-0002', @custom_field)
   end
 
 end

@@ -5,6 +5,12 @@ module SerialNumberField
     extend ActiveSupport::Concern
     unloadable
 
+    included do
+      unloadable
+
+      after_save :assign_serial_number!
+    end
+
     def assign_serial_number!
       serial_number_fields.each do |cf|
         next if assigned_serial_number?(cf)
@@ -12,7 +18,6 @@ module SerialNumberField
         target_custom_value = serial_number_custom_value(cf)
         new_serial_number = cf.format.generate_value(cf, self)
 
-        # Unimplemented change Tracker(custom_value is nil)
         if target_custom_value.present?
           target_custom_value.update_attributes!(
             :value => new_serial_number)

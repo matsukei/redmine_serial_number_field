@@ -20,6 +20,8 @@ def create_default_serial_number_field
   Project.find(2).issue_custom_fields << custom_field
   # Bug
   Tracker.find(1).custom_fields << custom_field
+  # Support request
+  Tracker.find(3).custom_fields << custom_field
 
   return custom_field
 end
@@ -40,4 +42,23 @@ def invalid_regexp_values
     '{abc}-{yy}-{000}', '{yy}-{00000}-OCG',
     '{YYYY}-{00000}日本語', 'hogehoge'
   ]
+end
+
+def assert_added_serial_number(issue_id, expected_value, custom_field)
+  issue = Issue.find(issue_id)
+  custom_value = issue.custom_values.where(
+    :custom_field_id => custom_field.id).first
+
+  assert_not_nil custom_value
+  assert_equal expected_value, custom_value.value
+  assert_include custom_field, issue.available_custom_fields
+end
+
+def assert_none_serial_number(issue_id, custom_field)
+  issue = Issue.find(issue_id)
+  custom_value = issue.custom_values.where(
+    :custom_field_id => custom_field.id).first
+
+  assert_nil custom_value
+  assert_not_include custom_field, issue.available_custom_fields
 end

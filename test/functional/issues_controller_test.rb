@@ -52,11 +52,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     assert_redirected_to :controller => 'issues', :action => 'show', :id => Issue.last.id
 
     issue = Issue.find_by_subject('This is the test_new issue')
-    assert_not_nil issue
-
-    v = issue.custom_values.where(:custom_field_id => @custom_field.id).first
-    assert_not_nil v
-    assert_equal 'MCC-0001', v.value
+    assert_added_serial_number(issue.id, 'MCC-0001', @custom_field)
 
     # show
     get :show, {
@@ -91,11 +87,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-
-    issue = Issue.find(issue.id)
-    v = issue.custom_values.where(:custom_field_id => @custom_field.id).first
-    assert_not_nil v
-    assert_equal 'MCC-0001', v.value
+    assert_added_serial_number(issue.id, 'MCC-0001', @custom_field)
   end
 
   def test_show_with_already_created
@@ -127,23 +119,122 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_with_already_created
-    3.times do |i|
-      assert_difference 'Journal.count' do
-        put :update, {
-            :id => 1,
-            :issue => {
-              :subject => "try #{i.next}"
-            }
+    # Added serial nubmer #1 project_id: 1, tracker_id: 1
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 1,
+          :issue => {
+            :subject => 'just trying #1'
           }
-      end
-
-      issue = Issue.find(1)
-      v = issue.custom_values.where(:custom_field_id => @custom_field.id).first
-      assert_not_nil v
-      # TODO
-      assert_equal nil, v.value
+        }
     end
+    assert_added_serial_number(1, 'MCC-0001', @custom_field)
 
+    # Added serial nubmer #3 project_id: 1, tracker_id: 1
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 3,
+          :issue => {
+            :subject => 'just trying #3'
+          }
+        }
+    end
+    assert_added_serial_number(3, 'MCC-0002', @custom_field)
+
+    # Changed tracker(have serial number) #3 project_id: 1, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 3,
+          :issue => {
+            :tracker_id => 3
+          }
+        }
+    end
+    assert_added_serial_number(3, 'MCC-0002', @custom_field)
+
+    # Changed tracker(not have serial number) #3 project_id: 1, tracker_id: 2
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 3,
+          :issue => {
+            :tracker_id => 2
+          }
+        }
+    end
+    assert_none_serial_number(3, @custom_field)
+
+    # Changed project(not have serial number) #1 project_id: 3, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 1,
+          :issue => {
+            :project_id => 3,
+            :tracker_id => 3
+          }
+        }
+    end
+    assert_none_serial_number(1, @custom_field)
+
+    # Changed project(have serial number) #1 project_id: 2, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 1,
+          :issue => {
+            :project_id => 2,
+            :tracker_id => 3
+          }
+        }
+    end
+    assert_added_serial_number(1, 'MCC-0001', @custom_field)
+
+    # Changed project(have serial number) #2 project_id: 1, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 2,
+          :issue => {
+            :tracker_id => 3
+          }
+        }
+    end
+    assert_added_serial_number(2, 'MCC-0001', @custom_field)
+
+    # Changed project(have serial number) #1 project_id: 1, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 1,
+          :issue => {
+            :project_id => 1,
+            :tracker_id => 3
+          }
+        }
+    end
+    # TODO
+    assert_added_serial_number(1, 'MCC-0001', @custom_field)
+
+    # Changed project(not have serial number) #2 project_id: 3, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 2,
+          :issue => {
+            :project_id => 3,
+            :tracker_id => 3
+          }
+        }
+    end
+    assert_none_serial_number(2, @custom_field)
+
+    # Changed project(have serial number) #2 project_id: 1, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 2,
+          :issue => {
+            :project_id => 1,
+            :tracker_id => 3
+          }
+        }
+    end
+    # TODO
+    assert_added_serial_number(2, 'MCC-0002', @custom_field)
   end
 
   def test_get_bulk_edit
@@ -164,47 +255,22 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     expected_serial_numbers = [
       'MCC-0001', nil, 'MCC-0001', nil, 'MCC-0002', 'MCC-0003'
     ]
-    # 1
+
     post :bulk_update, {
         :ids => issue_ids,
-        :notes => 'Bulk editing #1'
+        :notes => "Bulk editing"
       }
 
     issue_ids.each_with_index do |issue_id, i|
       issue = Issue.find(issue_id)
       journal = issue.journals.reorder('created_on DESC').first
-      assert_equal 'Bulk editing #1', journal.notes
+      assert_equal "Bulk editing", journal.notes
 
-      expected_serial_number = expected_serial_numbers[i]
-      v = issue.custom_values.where(:custom_field_id => @custom_field.id).first
-      if expected_serial_number.nil?
-        assert_nil v
+      expected_value = expected_serial_numbers[i]
+      if expected_value.nil?
+        assert_none_serial_number(issue_id, @custom_field)
       else
-        # TODO
-        assert_not_nil v
-        assert_equal nil, v.value
-      end
-    end
-
-    # 2
-    post :bulk_update, {
-        :ids => issue_ids,
-        :notes => 'Bulk editing #2'
-      }
-
-    issue_ids.each_with_index do |issue_id, i|
-      issue = Issue.find(issue_id)
-      journal = issue.journals.reorder('created_on DESC').first
-      assert_equal 'Bulk editing #2', journal.notes
-
-      expected_serial_number = expected_serial_numbers[i]
-      v = issue.custom_values.where(:custom_field_id => @custom_field.id).first
-      if expected_serial_number.nil?
-        assert_nil v
-      else
-        # TODO
-        assert_not_nil v
-        assert_equal expected_serial_number, v.value
+        assert_added_serial_number(issue_id, expected_value, @custom_field)
       end
     end
 

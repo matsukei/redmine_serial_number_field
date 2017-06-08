@@ -4,5 +4,5 @@ en:
   activerecord:
     errors:
       messages:
-        end_must_numeric_format_in_serial_number: "is end must be a numeric format"
+        end_must_numeric_format_in_serial_number: "is end must be a serial number format"
         invalid_format_in_serial_number: "is contains an invalid format"
