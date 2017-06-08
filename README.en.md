@@ -4,7 +4,7 @@
 
 [日本語 »](https://github.com/matsukei/redmine_serial_number_field/blob/master/README.md)
 
-It is a plugin that provides custom fields that automatically add sequential numbers to Redmine.
+Add a format to be serial number in the specified format as a issue custom field.
 
 ## Features
 
@@ -35,8 +35,8 @@ It is a plugin that provides custom fields that automatically add sequential num
 4. If you wish to use it as a filter or search condition, please check as appropriate.
 5. Specify the tracker and project you want to number automatically.
 6. Done!
-  * If you create a new ticket it will be automatically numbered.
-  * Issues already created will be numbered as they are updated.
+    * If you create a new issue it will be automatically numbered.
+    * Issues already created will be numbered as they are updated.
 
 ![usage.png](https://github.com/matsukei/redmine_serial_number_field/blob/master/doc/images/usage.en.png)
 
@@ -67,7 +67,7 @@ It is a plugin that provides custom fields that automatically add sequential num
 1. git clone or copy an unarchived plugin to `plugins/redmine_serial_number_field` on your Redmine path.
 2. `$ cd your_redmine_path/`
 3. `$ bundle install`
-4. Redmineを再起動してください
+4. Please restart Redmine
 
 ## License
 
