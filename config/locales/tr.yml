@@ -1,0 +1,9 @@
+
+tr:
+  label_serial_number: Otomatik Seri No
+
+  activerecord:
+    errors:
+      messages:
+        end_must_numeric_format_in_serial_number: "Sonunda Numara formatı olmak zorunda"
+        invalid_format_in_serial_number: "Geçersiz format içeriyor"
