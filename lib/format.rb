@@ -36,7 +36,7 @@ module SerialNumberField
 
     def generate_value(custom_field, issue)
       datetime = issue.created_on.to_datetime || DateTime.now
-      value = max_custom_value(custom_field, issue, datetime)
+      value = max_custom_value(custom_field, datetime)
 
       if value.present?
         value.next
@@ -51,10 +51,9 @@ module SerialNumberField
         DATE_FORMATS.stringify_keys.keys
       end
 
-      def max_custom_value(custom_field, issue, datetime)
+      def max_custom_value(custom_field, datetime)
         matcher = generate_matcher(custom_field, datetime)
-        custom_values = custom_field.custom_values.where(
-          customized_id: issue.project.issues.map(&:id)).map(&:value)
+        custom_values = custom_field.custom_values.map(&:value)
         # custom_values #=> e.g. ['2014-001', '2014-002', '14-0001', ...]
         custom_values.select { |value| value =~ matcher }.sort.last
       end

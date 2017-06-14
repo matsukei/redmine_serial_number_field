@@ -18,7 +18,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   include Redmine::I18n
 
   def setup
-    @custom_field = create_default_serial_number_field
+    @default_custom_field = create_default_serial_number_field
+    @for_all_custom_field = create_for_all_serial_number_field
     @request.session[:user_id] = 2
   end
 
@@ -31,7 +32,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     assert_select 'form#issue-form' do
       # Delete the screen input item later
-      assert_select 'input[name=?]', "issue[custom_field_values][#{@custom_field.id}]"
+      assert_select 'input[name=?]', "issue[custom_field_values][#{@default_custom_field.id}]"
+      assert_select 'input[name=?]', "issue[custom_field_values][#{@for_all_custom_field.id}]"
     end
   end
 
@@ -52,7 +54,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     assert_redirected_to :controller => 'issues', :action => 'show', :id => Issue.last.id
 
     issue = Issue.find_by_subject('This is the test_new issue')
-    assert_added_serial_number(issue.id, 'MCC-0001', @custom_field)
+    assert_added_serial_number(issue.id, 'MCC-0001', @default_custom_field)
+    assert_added_serial_number(issue.id, 'MCC-0001', @for_all_custom_field)
 
     # show
     get :show, {
@@ -60,9 +63,16 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
       }
     assert_response :success
 
-    assert_select "div.cf_#{@custom_field.id}.attribute" do
+    assert_select "div.cf_#{@default_custom_field.id}.attribute" do
       assert_select 'div.label' do
-        assert_select 'span', text: @custom_field.name
+        assert_select 'span', text: @default_custom_field.name
+      end
+      assert_select 'div.value', text: /MCC-0001/
+    end
+
+    assert_select "div.cf_#{@for_all_custom_field.id}.attribute" do
+      assert_select 'div.label' do
+        assert_select 'span', text: @for_all_custom_field.name
       end
       assert_select 'div.value', text: /MCC-0001/
     end
@@ -75,7 +85,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     assert_select 'form#issue-form' do
       # Delete the screen input item later
-      assert_select "input[name=?][value='MCC-0001']", "issue[custom_field_values][#{@custom_field.id}]"
+      assert_select "input[name=?][value='MCC-0001']", "issue[custom_field_values][#{@default_custom_field.id}]"
+      assert_select "input[name=?][value='MCC-0001']", "issue[custom_field_values][#{@for_all_custom_field.id}]"
     end
 
     # update
@@ -87,7 +98,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_added_serial_number(issue.id, 'MCC-0001', @custom_field)
+    assert_added_serial_number(issue.id, 'MCC-0001', @default_custom_field)
+    assert_added_serial_number(issue.id, 'MCC-0001', @for_all_custom_field)
   end
 
   def test_show_with_already_created
@@ -96,9 +108,16 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
       }
     assert_response :success
 
-    assert_select "div.cf_#{@custom_field.id}.attribute" do
+    assert_select "div.cf_#{@default_custom_field.id}.attribute" do
       assert_select 'div.label' do
-        assert_select 'span', text: @custom_field.name
+        assert_select 'span', text: @default_custom_field.name
+      end
+      assert_select 'div.value', text: ''
+    end
+
+    assert_select "div.cf_#{@for_all_custom_field.id}.attribute" do
+      assert_select 'div.label' do
+        assert_select 'span', text: @for_all_custom_field.name
       end
       assert_select 'div.value', text: ''
     end
@@ -113,7 +132,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     assert_select 'form#issue-form' do
       # Delete the screen input item later
-      assert_select "input[name=?]", "issue[custom_field_values][#{@custom_field.id}]"
+      assert_select "input[name=?]", "issue[custom_field_values][#{@default_custom_field.id}]"
+      assert_select "input[name=?]", "issue[custom_field_values][#{@for_all_custom_field.id}]"
     end
 
   end
@@ -128,7 +148,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_added_serial_number(1, 'MCC-0001', @custom_field)
+    assert_added_serial_number(1, 'MCC-0001', @default_custom_field)
+    assert_added_serial_number(1, 'MCC-0001', @for_all_custom_field)
 
     # Added serial nubmer #3 project_id: 1, tracker_id: 1
     assert_difference 'Journal.count' do
@@ -139,7 +160,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_added_serial_number(3, 'MCC-0002', @custom_field)
+    assert_added_serial_number(3, 'MCC-0002', @default_custom_field)
+    assert_added_serial_number(3, 'MCC-0002', @for_all_custom_field)
 
     # Changed tracker(have serial number) #3 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
@@ -150,7 +172,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_added_serial_number(3, 'MCC-0002', @custom_field)
+    assert_added_serial_number(3, 'MCC-0002', @default_custom_field)
+    assert_added_serial_number(3, 'MCC-0002', @for_all_custom_field)
 
     # Changed tracker(not have serial number) #3 project_id: 1, tracker_id: 2
     assert_difference 'Journal.count' do
@@ -161,7 +184,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_none_serial_number(3, @custom_field)
+    assert_none_serial_number(3, @default_custom_field)
+    assert_added_serial_number(3, 'MCC-0002', @for_all_custom_field)
 
     # Changed project(not have serial number) #1 project_id: 3, tracker_id: 3
     assert_difference 'Journal.count' do
@@ -173,7 +197,21 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_none_serial_number(1, @custom_field)
+    assert_none_serial_number(1, @default_custom_field)
+    assert_added_serial_number(1, 'MCC-0001', @for_all_custom_field)
+
+    # Changed project(have serial number) #3 project_id: 1, tracker_id: 3
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 3,
+          :issue => {
+            :project_id => 1,
+            :tracker_id => 3
+          }
+        }
+    end
+    assert_added_serial_number(3, 'MCC-0001', @default_custom_field)
+    assert_added_serial_number(3, 'MCC-0002', @for_all_custom_field)
 
     # Changed project(have serial number) #1 project_id: 2, tracker_id: 3
     assert_difference 'Journal.count' do
@@ -185,7 +223,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_added_serial_number(1, 'MCC-0001', @custom_field)
+    assert_added_serial_number(1, 'MCC-0002', @default_custom_field)
+    assert_added_serial_number(1, 'MCC-0001', @for_all_custom_field)
 
     # Changed project(have serial number) #2 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
@@ -196,7 +235,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_added_serial_number(2, 'MCC-0001', @custom_field)
+    assert_added_serial_number(2, 'MCC-0003', @default_custom_field)
+    assert_added_serial_number(2, 'MCC-0003', @for_all_custom_field)
 
     # Changed project(have serial number) #1 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
@@ -208,8 +248,22 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    # TODO
-    assert_added_serial_number(1, 'MCC-0001', @custom_field)
+    assert_added_serial_number(1, 'MCC-0002', @default_custom_field)
+    assert_added_serial_number(1, 'MCC-0001', @for_all_custom_field)
+
+
+    # Changed project(have serial number) #4 project_id: 2, tracker_id: 2
+    assert_difference 'Journal.count' do
+      put :update, {
+          :id => 4,
+          :issue => {
+            :project_id => 2,
+            :tracker_id => 2
+          }
+        }
+    end
+    assert_none_serial_number(4, @default_custom_field)
+    assert_added_serial_number(4, 'MCC-0004', @for_all_custom_field)
 
     # Changed project(not have serial number) #2 project_id: 3, tracker_id: 3
     assert_difference 'Journal.count' do
@@ -221,7 +275,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    assert_none_serial_number(2, @custom_field)
+    assert_none_serial_number(2, @default_custom_field)
+    assert_added_serial_number(2, 'MCC-0003', @for_all_custom_field)
 
     # Changed project(have serial number) #2 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
@@ -233,8 +288,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
           }
         }
     end
-    # TODO
-    assert_added_serial_number(2, 'MCC-0002', @custom_field)
+    assert_added_serial_number(2, 'MCC-0003', @default_custom_field)
+    assert_added_serial_number(2, 'MCC-0003', @for_all_custom_field)
   end
 
   def test_get_bulk_edit
@@ -245,19 +300,23 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     assert_select 'form#bulk_edit_form' do
       # Delete the screen input item later
-      assert_select "input[name=?][value='__none__']", "issue[custom_field_values][#{@custom_field.id}]"
+      assert_select "input[name=?][value='__none__']", "issue[custom_field_values][#{@default_custom_field.id}]"
+      assert_select "input[name=?][value='__none__']", "issue[custom_field_values][#{@for_all_custom_field.id}]"
     end
 
   end
 
   def test_bulk_update
     issue_ids = [1, 2, 4, 5, 7, 8]
-    expected_serial_numbers = [
-      'MCC-0001', nil, 'MCC-0001', nil, 'MCC-0002', 'MCC-0003'
+    expected_default_serial_numbers = [
+      'MCC-0001', nil, 'MCC-0002', nil, 'MCC-0003', 'MCC-0004'
+    ]
+    expected_for_all_serial_numbers = [
+      'MCC-0001', 'MCC-0002', 'MCC-0003','MCC-0004', 'MCC-0005', 'MCC-0006'
     ]
 
     post :bulk_update, {
-        :ids => issue_ids,
+        :ids => issue_ids.shuffle,
         :notes => "Bulk editing"
       }
 
@@ -266,12 +325,13 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
       journal = issue.journals.reorder('created_on DESC').first
       assert_equal "Bulk editing", journal.notes
 
-      expected_value = expected_serial_numbers[i]
+      expected_value = expected_default_serial_numbers[i]
       if expected_value.nil?
-        assert_none_serial_number(issue_id, @custom_field)
+        assert_none_serial_number(issue_id, @default_custom_field)
       else
-        assert_added_serial_number(issue_id, expected_value, @custom_field)
+        assert_added_serial_number(issue_id, expected_value, @default_custom_field)
       end
+      assert_added_serial_number(issue_id, expected_for_all_serial_numbers[i], @for_all_custom_field)
     end
 
   end

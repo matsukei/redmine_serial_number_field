@@ -11,8 +11,8 @@ Add a format to be serial number in the specified format as a issue custom field
 * "Automatic serial number" is available as a format for custom fields for issues.
   * After creating a new custom field, you can not edit the "Regular expression".
   * Every user who can create a issue has automatic number assignment authority.
-* Automatically assign sequential numbers of specified formats on a project basis at issue registration or update.
-  * It works not only for single issues but also for bulk operation.
+* Automatically assign serial numbers in the specified format at issue registration or update(Including bulk operations).
+  * Assign a serial number for each custom field. If the same custom field is used for multiple projects, It will be consecutive numbers in those projects.
   * Custom field items are displayed when viewing issues. However, it will not be displayed when registering or updating.
 * Basic options for custom fields are also available, such as issue filter criteria and search target.
 
@@ -20,8 +20,8 @@ Add a format to be serial number in the specified format as a issue custom field
 
 #### When you change tracker or project of numbered issue
 
-* If the changed tracker does not have the same custom field, the sequential number assigned will be deleted.
-* If the tracker after change has the same custom field, the sequential numbers numbered will not change (there is a risk of duplication).
+* If the changed tracker does not have the same custom field, the serial number assigned will be deleted.
+* If the tracker after change has the same custom field, the serial numbers numbered will not change.
 
 #### When you set permissions for custom fields in workflow
 
@@ -38,7 +38,15 @@ Add a format to be serial number in the specified format as a issue custom field
     * If you create a new issue it will be automatically numbered.
     * Issues already created will be numbered as they are updated.
 
+## Screenshot
+
+*Administration > Custom fields > Issues > Automatic serial number*
+
 ![usage.png](https://github.com/matsukei/redmine_serial_number_field/blob/master/doc/images/usage.en.png)
+
+*Issues*
+
+![issues.png](https://github.com/matsukei/redmine_serial_number_field/blob/master/doc/images/issues.png)
 
 ## Supported versions
 
@@ -46,12 +54,12 @@ Add a format to be serial number in the specified format as a issue custom field
 
 ## Format specifications
 
-|Column used in year format |Year format|fiscal year|Serial number format| result                 |
+|Column used in year format |Year format|fiscal year(4/1 - 3/31)|Serial number format| result                 |
 |---------------------------|-----------|-----------|--------------------|------------------------|
-|created_on                 |`yy`       |No         |000                 |2015-03-01 => '15001'   |
-|created_on                 |`yyyy`     |No         |0000                |2015-03-01 => '20150001'|
-|created_on                 |`YY`       |Yes        |000                 |2015-03-01 => '14001'   |
-|created_on                 |`YYYY`     |Yes        |0000                |2015-03-01 => '20140001'|
+|Issue#created_on           |`yy`       |No         |000                 |2015-03-01 => '15001'   |
+|Issue#created_on           |`yyyy`     |No         |0000                |2015-03-01 => '20150001'|
+|Issue#created_on           |`YY`       |Yes        |000                 |2015-03-01 => '14001'   |
+|Issue#created_on           |`YYYY`     |Yes        |0000                |2015-03-01 => '20140001'|
 
 * OK
   * `{000000}` #=> `000001`

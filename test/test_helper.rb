@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 def create_default_serial_number_field
   custom_field = IssueCustomField.create!({
     :field_format => "serial_number",
-    :name => 's-n-field',
+    :name => 'default_sn',
     :regexp => 'MCC-{0000}',
     :is_required =>"0",
     :is_filter => "1",
@@ -22,6 +22,23 @@ def create_default_serial_number_field
   Tracker.find(1).custom_fields << custom_field
   # Support request
   Tracker.find(3).custom_fields << custom_field
+
+  return custom_field
+end
+
+def create_for_all_serial_number_field
+  custom_field = IssueCustomField.create!({
+    :field_format => "serial_number",
+    :name => 'for_all_sn',
+    :regexp => 'MCC-{0000}',
+    :is_required =>"0",
+    :is_filter => "1",
+    :searchable => "1",
+    :visible => "1",
+    :is_for_all => "1",
+    :role_ids  => []
+  })
+  Tracker.all.each { |tracker| tracker.custom_fields << custom_field }
 
   return custom_field
 end
