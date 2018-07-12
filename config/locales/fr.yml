@@ -1,0 +1,8 @@
+fr:
+  label_serial_number: Numéro auto-incrémenté
+
+  activerecord:
+    errors:
+      messages:
+        end_must_numeric_format_in_serial_number: "doit terminer par le numéro auto-incrémenté"
+        invalid_format_in_serial_number: "format invalide"
