@@ -7,8 +7,8 @@ module SerialNumberField
     included do
       unloadable
 
-      def validate_custom_field_with_skip_regexp_valid
-        validate_custom_field_without_skip_regexp_valid
+      def validate_custom_field
+        super
 
         invalid_message = l('activerecord.errors.messages.invalid')
         if errors[:regexp].include?(invalid_message) && field_format == SerialNumberField::Format::NAME
@@ -21,12 +21,11 @@ module SerialNumberField
         end
       end
 
-      alias_method_chain :validate_custom_field, :skip_regexp_valid
     end
 
   end
 end
 
 SerialNumberField::IssueCustomFieldPatch.tap do |mod|
-  IssueCustomField.send :include, mod unless IssueCustomField.include?(mod)
+  IssueCustomField.send :prepend, mod unless IssueCustomField.include?(mod)
 end
