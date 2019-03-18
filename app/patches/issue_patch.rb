@@ -3,11 +3,8 @@ require_dependency 'issue'
 module SerialNumberField
   module IssuePatch
     extend ActiveSupport::Concern
-    unloadable
 
     included do
-      unloadable
-
       after_save :assign_serial_number!
     end
 

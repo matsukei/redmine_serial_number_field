@@ -50,7 +50,7 @@ Redmine に自動で連番を付加するカスタムフィールドを提供す
 
 ## Supported versions
 
-* Redmine 3.2.x or higher
+* Redmine 4.0 (Ruby 2.2, 2.3, 2.4, 2.5, 2.6)
 
 ## Format specifications
 

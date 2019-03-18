@@ -24,7 +24,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_get_new
-    get :new, {
+    get :new, :params => {
         :project_id => 1,
         :tracker_id => 1
       }
@@ -41,7 +41,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     # test_post_create
     assert_difference 'Issue.count' do
       assert_no_difference 'Journal.count' do
-        post :create, {
+        post :create, :params => {
             :project_id => 1,
             :issue => {
               :tracker_id => 1,
@@ -58,7 +58,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     assert_added_serial_number(issue.id, 'MCC-0001', @for_all_custom_field)
 
     # show
-    get :show, {
+    get :show, :params => {
         :id => issue.id
       }
     assert_response :success
@@ -78,7 +78,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     end
 
     # edit
-    get :edit, {
+    get :edit, :params => {
         :id => issue.id
       }
     assert_response :success
@@ -91,7 +91,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # update
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => issue.id,
           :issue => {
             :notes => 'just trying'
@@ -103,7 +103,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_show_with_already_created
-    get :show, {
+    get :show, :params => {
         :id => 1
       }
     assert_response :success
@@ -125,7 +125,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_get_edit_with_already_created
-    get :edit, {
+    get :edit, :params => {
         :id => 1
       }
     assert_response :success
@@ -141,7 +141,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   def test_put_update_with_already_created
     # Added serial nubmer #1 project_id: 1, tracker_id: 1
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 1,
           :issue => {
             :subject => 'just trying #1'
@@ -153,7 +153,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Added serial nubmer #3 project_id: 1, tracker_id: 1
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 3,
           :issue => {
             :subject => 'just trying #3'
@@ -165,7 +165,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed tracker(have serial number) #3 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 3,
           :issue => {
             :tracker_id => 3
@@ -177,7 +177,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed tracker(not have serial number) #3 project_id: 1, tracker_id: 2
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 3,
           :issue => {
             :tracker_id => 2
@@ -189,7 +189,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(not have serial number) #1 project_id: 3, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 1,
           :issue => {
             :project_id => 3,
@@ -202,7 +202,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(have serial number) #3 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 3,
           :issue => {
             :project_id => 1,
@@ -215,7 +215,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(have serial number) #1 project_id: 2, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 1,
           :issue => {
             :project_id => 2,
@@ -228,7 +228,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(have serial number) #2 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 2,
           :issue => {
             :tracker_id => 3
@@ -240,7 +240,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(have serial number) #1 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 1,
           :issue => {
             :project_id => 1,
@@ -254,7 +254,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(have serial number) #4 project_id: 2, tracker_id: 2
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 4,
           :issue => {
             :project_id => 2,
@@ -267,7 +267,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(not have serial number) #2 project_id: 3, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 2,
           :issue => {
             :project_id => 3,
@@ -280,7 +280,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
 
     # Changed project(have serial number) #2 project_id: 1, tracker_id: 3
     assert_difference 'Journal.count' do
-      put :update, {
+      put :update, :params => {
           :id => 2,
           :issue => {
             :project_id => 1,
@@ -293,7 +293,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
   end
 
   def test_get_bulk_edit
-    get :bulk_edit, {
+    get :bulk_edit, :params => {
         :ids => [1, 3]
       }
     assert_response :success
@@ -315,7 +315,7 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
       'MCC-0001', 'MCC-0002', 'MCC-0003','MCC-0004', 'MCC-0005', 'MCC-0006'
     ]
 
-    post :bulk_update, {
+    post :bulk_update, :params => {
         :ids => issue_ids.shuffle,
         :notes => "Bulk editing"
       }

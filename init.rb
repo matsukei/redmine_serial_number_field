@@ -2,8 +2,8 @@ Redmine::Plugin.register :redmine_serial_number_field do
   name 'Redmine Serial Number Field'
   author 'Matsukei Co.,Ltd'
   description 'Add a format to be serial number in the specified format as a issue custom field.'
-  version '1.0.0'
-  requires_redmine version_or_higher: '2.6'
+  version '2.0.0'
+  requires_redmine version_or_higher: '4.0'
   url 'https://github.com/matsukei/redmine_serial_number_field'
   author_url 'http://www.matsukei.co.jp/'
 end

@@ -50,7 +50,7 @@ Add a format to be serial number in the specified format as a issue custom field
 
 ## Supported versions
 
-* Redmine 3.2.x or higher
+* Redmine 4.0 (Ruby 2.2, 2.3, 2.4, 2.5, 2.6)
 
 ## Format specifications
 
