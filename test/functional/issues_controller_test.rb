@@ -37,8 +37,8 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     end
   end
 
-  def test_post_create_and_show_and_get_edit_update_with_current_created
-    # test_post_create
+  def test_post_create_and_show_and_get_edit_update_with_current_created_and_post_copy
+    # create
     assert_difference 'Issue.count' do
       assert_no_difference 'Journal.count' do
         post :create, :params => {
@@ -100,6 +100,29 @@ class SerialNumberField::IssuesControllerTest < ActionController::TestCase
     end
     assert_added_serial_number(issue.id, 'MCC-0001', @default_custom_field)
     assert_added_serial_number(issue.id, 'MCC-0001', @for_all_custom_field)
+
+    # copy
+    assert_difference 'Issue.count' do
+      post :create, :params => {
+          :project_id => 1,
+          :issue => {
+            :tracker_id => 1,
+            :status_id => 2,
+            :subject => 'This is the test_copy issue',
+            :custom_field_values => {
+              @default_custom_field.id => 'MCC-0001'
+            }
+          },
+          :copy_from => issue.id,
+          :link_copy => 1
+        }
+    end
+    copied_issue = Issue.find_by_subject('This is the test_copy issue')
+    assert_redirected_to :controller => 'issues', :action => 'show', :id => copied_issue.id
+
+    assert_not_equal(issue.id, copied_issue.id)
+    assert_added_serial_number(copied_issue.id, 'MCC-0002', @default_custom_field)
+    assert_added_serial_number(copied_issue.id, 'MCC-0002', @for_all_custom_field)
   end
 
   def test_show_with_already_created
