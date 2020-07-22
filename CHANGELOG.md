@@ -1,6 +1,8 @@
 ## 3.0.0
 
 - Added ISO format #8 (@rambowm)
+- Dropped Redmine 4.0 support
+- Redmine 4.1 support
 
 ## 2.0.0
 

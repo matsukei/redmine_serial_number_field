@@ -1,7 +1,5 @@
 # Redmine Serial Number Field
 
-[![Build Status](https://travis-ci.org/matsukei/redmine_serial_number_field.svg?branch=master)](https://travis-ci.org/matsukei/redmine_serial_number_field)
-
 [日本語 »](https://github.com/matsukei/redmine_serial_number_field/blob/master/README.md)
 
 Add a format to be serial number in the specified format as a issue custom field.
@@ -50,7 +48,7 @@ Add a format to be serial number in the specified format as a issue custom field
 
 ## Supported versions
 
-* Redmine 4.0 (Ruby 2.2, 2.3, 2.4, 2.5, 2.6)
+* Redmine 4.1 (Ruby 2.6)
 
 ## Format specifications
 
