@@ -1,0 +1,17 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: redmine-plugin-test-action
+        uses: two-pack/redmine-plugin-test-action@v2.0.2
+        with:
+          plugin_name: redmine_serial_number_field
+          redmine_version: v4.1
+          ruby_version: v2.6
+          database: postgresql
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,17 +7,13 @@ module SerialNumberField
     self.customized_class_names = %w(Issue)
     self.form_partial = 'custom_fields/formats/serial_number'
 
-    MATCHERS = {
-      :TOW_DIGIT_NUMBER => /\d{2}/,
-      :FOUR_DIGIT_NUMBER => /\d{4}/,
-      :FORMAT_WRAPPER => /\{(.+?)\}/
-    }
-
+    FORMAT_WRAPPER = /\{(.+?)\}/
     DATE_FORMATS = {
-      :'yyyy' => { :strftime => '%Y', :financial_year => false, :regexp => MATCHERS[:FOUR_DIGIT_NUMBER] },
-      :'yy'   => { :strftime => '%y', :financial_year => false, :regexp => MATCHERS[:TOW_DIGIT_NUMBER] },
-      :'YYYY' => { :strftime => '%Y', :financial_year => true, :regexp => MATCHERS[:FOUR_DIGIT_NUMBER] },
-      :'YY'   => { :strftime => '%y', :financial_year => true, :regexp => MATCHERS[:TOW_DIGIT_NUMBER] }
+      :'yyyy' => { :strftime => '%Y',     :financial_year => false },
+      :'yy'   => { :strftime => '%y',     :financial_year => false },
+      :'YYYY' => { :strftime => '%Y',     :financial_year => true },
+      :'YY'   => { :strftime => '%y',     :financial_year => true },
+      :'ISO'  => { :strftime => '%Y%m%d', :financial_year => false }
     }
 
     def validate_custom_field(custom_field)
@@ -60,7 +56,7 @@ module SerialNumberField
 
       def replace_format_value(custom_field)
         if block_given?
-          custom_field.regexp.gsub(MATCHERS[:FORMAT_WRAPPER]) do |format_value_with_brace|
+          custom_field.regexp.gsub(FORMAT_WRAPPER) do |format_value_with_brace|
             # format_value_with_brace #=> e.g. '{yy}', '{0000}'
             # $1.clone #=> e.g. 'yy', '0000'
             yield($1.clone)

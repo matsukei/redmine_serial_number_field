@@ -10,7 +10,7 @@ module SerialNumberField
 
     def assign_serial_number!
       serial_number_fields.each do |cf|
-        next if assigned_serial_number?(cf)
+        next if assigned_serial_number?(cf) && !copy?
 
         target_custom_value = serial_number_custom_value(cf)
         new_serial_number = cf.format.generate_value(cf, self)

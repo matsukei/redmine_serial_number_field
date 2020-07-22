@@ -1,7 +1,5 @@
 # Redmine Serial Number Field
 
-[![Build Status](https://travis-ci.org/matsukei/redmine_serial_number_field.svg?branch=master)](https://travis-ci.org/matsukei/redmine_serial_number_field)
-
 [日本語 »](https://github.com/matsukei/redmine_serial_number_field/blob/master/README.md)
 
 Add a format to be serial number in the specified format as a issue custom field.
@@ -50,16 +48,17 @@ Add a format to be serial number in the specified format as a issue custom field
 
 ## Supported versions
 
-* Redmine 4.0 (Ruby 2.2, 2.3, 2.4, 2.5, 2.6)
+* Redmine 4.1 (Ruby 2.6)
 
 ## Format specifications
 
-|Column used in year format |Year format|fiscal year(4/1 - 3/31)|Serial number format| result                 |
-|---------------------------|-----------|-----------|--------------------|------------------------|
-|Issue#created_on           |`yy`       |No         |000                 |2015-03-01 => '15001'   |
-|Issue#created_on           |`yyyy`     |No         |0000                |2015-03-01 => '20150001'|
-|Issue#created_on           |`YY`       |Yes        |000                 |2015-03-01 => '14001'   |
-|Issue#created_on           |`YYYY`     |Yes        |0000                |2015-03-01 => '20140001'|
+|Column used in year format |Year format|fiscal year(4/1 - 3/31)|e.g. Regular expression  |e.g Result (2015-03-31)|
+|---------------------------|-----------|-----------------------|-------------------------|-----------------------|
+|Issue#created_on           |`yyyy`     |No                     |`{yyyy}-{0000}`          |`2015-0001`            |
+|^                          |`yy`       |No                     |`{yy}-{0000}`            |`15-0001`              |
+|^                          |`YYYY`     |Yes                    |`{YYYY}-{0000}`          |`2014-0001`            |
+|^                          |`YY`       |Yes                    |`{YY}-{0000}`            |`14-0001`              |
+|^                          |`ISO`      |No                     |`{ISO}-{0000}`           |`20150331-0001`        |
 
 * OK
   * `{000000}` #=> `000001`
