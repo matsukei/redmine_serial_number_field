@@ -54,12 +54,13 @@ Add a format to be serial number in the specified format as a issue custom field
 
 ## Format specifications
 
-|Column used in year format |Year format|fiscal year(4/1 - 3/31)|Serial number format| result                 |
-|---------------------------|-----------|-----------|--------------------|------------------------|
-|Issue#created_on           |`yy`       |No         |000                 |2015-03-01 => '15001'   |
-|Issue#created_on           |`yyyy`     |No         |0000                |2015-03-01 => '20150001'|
-|Issue#created_on           |`YY`       |Yes        |000                 |2015-03-01 => '14001'   |
-|Issue#created_on           |`YYYY`     |Yes        |0000                |2015-03-01 => '20140001'|
+|Column used in year format |Year format|fiscal year(4/1 - 3/31)|e.g. Regular expression  |e.g Result (2015-03-31)|
+|---------------------------|-----------|-----------------------|-------------------------|-----------------------|
+|Issue#created_on           |`yyyy`     |No                     |`{yyyy}-{0000}`          |`2015-0001`            |
+|^                          |`yy`       |No                     |`{yy}-{0000}`            |`15-0001`              |
+|^                          |`YYYY`     |Yes                    |`{YYYY}-{0000}`          |`2014-0001`            |
+|^                          |`YY`       |Yes                    |`{YY}-{0000}`            |`14-0001`              |
+|^                          |`ISO`      |No                     |`{ISO}-{0000}`           |`20150331-0001`        |
 
 * OK
   * `{000000}` #=> `000001`
