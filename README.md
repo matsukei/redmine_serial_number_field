@@ -48,7 +48,7 @@ Redmine に自動で連番を付加するカスタムフィールドを提供す
 
 ## Supported versions
 
-* Redmine 4.1 (Ruby 2.6)
+* Redmine 5.1 (Ruby 3.1)
 
 ## Format specifications
 
